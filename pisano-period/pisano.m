@@ -1,4 +1,13 @@
 function [v, p] = pisano(m)
+% PISANO
+% 
+% Inputs:
+% m = modulus
+%
+% Outputs:
+% v = row vector containing all elements of Fibonacci sequence up to
+% repetition mod m
+% p = pisano period
 
 arguments
     m (1,1) {isinteger}
@@ -13,5 +22,5 @@ while ~(v(k) == v(k-1) && v(k) == 1)
 end
 
 p = size(v, 2) - 2;
-
+ 
 end

@@ -1,4 +1,13 @@
 function [v, ratio, ratio_fil, N, D, N_fil, D_fil, hist] = plotPisano(k)
+% PLOTPISANO 
+%
+% Inputs: 
+% k = calculate pisano period for all integers up to and including k
+%
+% Outputs:
+%
+% calculates pisano period (and related info) for all natural numbers up to 
+% a given number
 
 arguments
     k (1,1) {isinteger}
@@ -11,13 +20,16 @@ v = [1 cell2mat(v)];
 ratio = v ./ x;
 % ratio = v ./ (x.^2);
 % subplot(2, 1, 1);
-scatter(x, v, 2, "blue")
+scatter(x, v, 2, "blue", 'DisplayName', 'pi(n)')
+title(sprintf("Pisano period pi(n) for naturals up to %d", k))
+xlabel("n")
+ylabel("pi(n)")
 
 slopes = [1/3, 1/2, 2/3, 4/5, 1, 2, 3, 4, 6];
 for m = slopes
     hold on;
     line = m*x;
-    plot(x, line, 'LineWidth', 1)
+    plot(x, line, 'LineWidth', 1, 'DisplayName', sprintf("pi(n) = %dn", m))
 end
 
 % subplot(2, 1, 2);
