@@ -1,0 +1,247 @@
+---
+title: "hamming_distance"
+output: html_notebook
+---
+
+```{r}
+
+library(ggplot2)
+library(gganimate)
+library(plotly)
+theme_set(theme_bw())
+
+```
+
+```{r}
+
+intToBase <- function (a, b) {
+  c <- c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) #desperate times; desperate measures 
+  while (a > 0) {
+    n = 0
+    while (b^n <= a) {
+      n = n + 1
+    }
+    d = as.integer(a/(b^(n - 1)))
+    a = a - d * (b^(n-1))
+    c = replace(c, n, d)
+  }
+  return(c)
+}
+
+intToBase(83, 3)
+
+```
+
+```{r}
+
+myDist <- function (a, b) {
+  i = 1
+  dist = 0
+  while (i <= length(a)) {
+    dist = dist + abs(a[i] - b[i])
+    i = i + 1
+  }
+  return (dist)
+}
+
+```
+
+```{r}
+
+ham_dist <- function (a, b, n) {
+  aBas <- intToBase(a, n)
+  bBas <- intToBase(b, n)
+  return (myDist(aBas, bBas))
+}
+
+```
+
+```{r}
+
+cVector = c(
+  rgb(0, 0, 0, max = 255, alpha = 255), # grey?
+  rgb(255, 0, 255, max = 255, alpha = 255), # purple
+  rgb(100, 0, 255, max = 255, alpha = 255), # indigo
+  rgb(0, 0, 255, max = 255, alpha = 255), # blue
+  rgb(0, 255, 255, max = 255, alpha = 255), # blue green
+  rgb(0, 255, 0, max = 255, alpha = 255), # green
+  rgb(255, 255, 0, max = 255, alpha = 255), # yellow
+  rgb(255, 178, 0, max = 255, alpha = 255), # orange
+  rgb(255, 0, 0, max = 255, alpha = 255) # red
+)
+
+```
+
+```{r}
+
+n = 5
+
+x = 0:400
+y = 0:200
+
+xOrigin = 0
+yOrigin = 0
+
+```
+
+```{r}
+
+# sum of hamming distances (base n) from origin
+
+base <- c(n)
+xPlot <- c(xOrigin)
+yPlot <- c(yOrigin)
+colors <- c(cVector[1])
+
+for (i in x) {
+  for (j in y) {
+    ham_sum = ham_dist(i, xOrigin, n) + ham_dist(j, yOrigin, n)
+    if (ham_sum < 9) {
+      base <- append(base, n)
+      xPlot <- append(xPlot, i)
+      yPlot <- append(yPlot, j)
+      colors <- append(colors, cVector[9 - ham_sum])
+    }
+  }
+}
+
+plot(xPlot, yPlot, col = colors, pch = 20)
+
+```
+
+```{r}
+
+# hamming distance (base n) between x/y coordinates
+
+base <- c(n)
+xPlot <- c(xOrigin)
+yPlot <- c(yOrigin)
+colors <- c(cVector[1])
+
+for (i in x) {
+  for (j in y) {
+    ham_sum = ham_dist(i, j, n)
+    if (ham_sum < 5) {
+      base <- append(base, n)
+      xPlot <- append(xPlot, i)
+      yPlot <- append(yPlot, j)
+      colors <- append(colors, cVector[9 - ham_sum])
+    }
+  }
+}
+
+plot(xPlot, yPlot, col = colors, pch = 20)
+
+```
+
+
+```{r}
+
+generateBaseFrame <- function (baseList) {
+  
+  # color vector
+  cVector = c(
+  rgb(0, 0, 0, max = 255, alpha = 255), # grey?
+  rgb(255, 0, 255, max = 255, alpha = 255), # purple
+  rgb(100, 0, 255, max = 255, alpha = 255), # indigo
+  rgb(0, 0, 255, max = 255, alpha = 255), # blue
+  rgb(0, 255, 255, max = 255, alpha = 255), # blue green
+  rgb(0, 255, 0, max = 255, alpha = 255), # green
+  rgb(255, 255, 0, max = 255, alpha = 255), # yellow
+  rgb(255, 178, 0, max = 255, alpha = 255), # orange
+  rgb(255, 0, 0, max = 255, alpha = 255) # red
+  )
+  
+  # basic information
+  x = 0:50
+  y = 0:50
+  
+  xOrigin = 0
+  yOrigin = 0
+  
+  base <- c(2)
+  xPlot <- c(xOrigin)
+  yPlot <- c(yOrigin)
+  colors <- c(cVector[1])
+  
+  # constructing vectors (combination of values for each base)
+  
+  for (n in baseList) {
+    
+    for (i in x) {
+      for (j in y) {
+        ham_sum = ham_dist(i, xOrigin, n) + ham_dist(j, yOrigin, n)
+        if (ham_sum < 9) {
+          base <- append(base, n)
+          xPlot <- append(xPlot, i)
+          yPlot <- append(yPlot, j)
+          colors <- append(colors, cVector[9 - ham_sum])
+        }
+      }
+    }
+    
+    ## plot(xPlot, yPlot, col = colors, pch = 20)
+  }
+  
+  # constructing data frame from vectors
+  
+  df <- data.frame("base" = base, "xPlot" = xPlot, "yPlot" = yPlot, "color" = colors)
+  
+  return (df)
+  
+}
+
+```
+
+
+```{r}
+
+# animation data frame
+
+change_base <- generateBaseFrame(2:10)
+
+```
+
+
+
+```{r}
+
+p <- ggplot(change_base, aes(x = xPlot, y = yPlot, colour = color)) +
+  geom_point(show.legend = FALSE, alpha = 0.7) +
+  scale_color_viridis_d() +
+  labs(x = "xPlot", y = "yPlot")
+p
+
+```
+
+```{r}
+p + transition_time(base)
+p
+```
+
+```{r}
+
+ggplot(change_base, aes(x=xPlot, y=yPlot))+
+  geom_point()+
+  theme_minimal() +
+  transition_states(base, transition_length = 1, state_length = 1, wrap = TRUE) + 
+  ease_aes('cubic-in-out')
+
+```
+
+
+```{r}
+
+p <- change_base %>%
+  plot_ly(
+    x = ~xPlot, 
+    y = ~yPlot, 
+    color = ~color, 
+    frame = ~base, 
+    type = 'scatter',
+    mode = 'markers'
+  )
+p
+
+```
+
