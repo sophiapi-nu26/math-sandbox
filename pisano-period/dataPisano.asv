@@ -54,6 +54,12 @@ ylabel(sprintf('ratio(n) / ratio(%dn)', ratio_multiplier))
 k = 5;
 tab_ratrat = [1:100;k*(1:100);ratio(1:100);ratio(k*(1:100));ratio(1:100)./ratio(k*(1:100))];
 
+temp = ratio(1:100) ./ ratio(2*(1:100));
+find(temp == 2);
+find(temp == 1);
+find(temp == 2/3);
+% ababacabccccacabccccacccaccccccbccacaccbacabcccbacccccccccaccccbaccccc...
+
 % OBSERVATIONS UP TO 1e5:
 % - ratio of 5 doesn't show up
 % - for n = ratio(x), if n is an int, ratio(5^k * x) = n
