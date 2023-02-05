@@ -1,5 +1,5 @@
-pArr = primes(100);
-numSolns = zeros(1, size(pArr, 2));
+pArr = primes(100); % array of primes
+numSolns = zeros(1, size(pArr, 2)); % array to store number of solutions for each prime
 
 % find quadratic residues by brute force
 for p = pArr
@@ -7,17 +7,19 @@ for p = pArr
     squares = [1:p-1 ; zeros(1, p-1)];
     countSolns = 2;
     for a = 1:(p-1)
-        squares(2, a) = mod(a^2, p);
+        squares(2, a) = mod(a^2, p); % fill squares with the square of each number
     end
-    leg1 = unique(squares(2,:));
+    leg1 = unique(squares(2,:)); % set array to store only unique values (effectively chopping half the list)
     disp(leg1);
-    fprintf('(%d, %d)\n', 1, 0);
+    fprintf('(%d, %d)\n', 1, 0); % add trivial solutions
     fprintf('(%d, %d)\n', 0, 1);
-    for a = leg1
-        if (sum(leg1 == a) > 0 && sum(leg1 == p+1-a) > 0)
-            countSolns = countSolns + 1;
+    for a = leg1 % for each element a with legendre numofber 1...
+        if (sum(leg1 == a) > 0 && sum(leg1 == p+1-a) > 0) % if 1-a is also a quadratic residue...
+            countSolns = countSolns + 1; % increment number  solutions
             fprintf('(%d, %d)\n', a, mod(p+1-a, p));
-        end
-    end
-    numSolns(1, find(pArr, p)); % 
+        end    end
+
+    numSolns(1, pArr == p) = countSolns; % insert number of solutions for p into array
 end
+
+disp(numSolns);

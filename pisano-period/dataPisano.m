@@ -55,10 +55,18 @@ k = 5;
 tab_ratrat = [1:100;k*(1:100);ratio(1:100);ratio(k*(1:100));ratio(1:100)./ratio(k*(1:100))];
 
 temp = ratio(1:100) ./ ratio(2*(1:100));
-find(temp == 2);
-find(temp == 1);
-find(temp == 2/3);
+find(temp == 2); % 2/1
+find(temp == 1); % 2/2
+find(temp == 2/3); %2/3
 % ababacabccccacabccccacccaccccccbccacaccbacabcccbacccccccccaccccbaccccca(71)...
+temp = ratio(1:100) ./ ratio(3*(1:100));
+find(temp == 3); % 3/1
+find(temp == 1.5); % 3/2
+find(temp == 1); % 3/3
+find(temp == 3/4) % 3/4
+% n / {1, 2, ..., n+1} only possible options?
+% ok just kidding 4/5 doesnt seem to exist for 4
+
 
 % OBSERVATIONS UP TO 1e5:
 % - ratio of 5 doesn't show up
