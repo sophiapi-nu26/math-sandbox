@@ -1,0 +1,23 @@
+pArr = primes(100);
+numSolns = zeros(1, size(pArr, 2));
+
+% find quadratic residues by brute force
+for p = pArr
+    fprintf('%d:\n', p);
+    squares = [1:p-1 ; zeros(1, p-1)];
+    countSolns = 2;
+    for a = 1:(p-1)
+        squares(2, a) = mod(a^2, p);
+    end
+    leg1 = unique(squares(2,:));
+    disp(leg1);
+    fprintf('(%d, %d)\n', 1, 0);
+    fprintf('(%d, %d)\n', 0, 1);
+    for a = leg1
+        if (sum(leg1 == a) > 0 && sum(leg1 == p+1-a) > 0)
+            countSolns = countSolns + 1;
+            fprintf('(%d, %d)\n', a, mod(p+1-a, p));
+        end
+    end
+    numSolns(1, find(pArr, p)); % 
+end
