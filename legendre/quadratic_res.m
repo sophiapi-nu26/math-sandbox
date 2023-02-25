@@ -25,11 +25,20 @@ end
 disp([pArr;numSolns]);
 
 figure;
-plot(pArr, numSolns);
+plot(pArr, numSolns, '-o');
+xlabel('p')
+ylabel('# of solns. to L(a) = 1 (mod p)')
+title('Quadratic Residues (All Primes)')
 
 figure;
-plot(pArr(mod(pArr, 4) == 1), numSolns(mod(pArr, 4) == 1)); % plot only the primes that are == 1 mod 4
+plot(pArr(mod(pArr, 4) == 1), numSolns(mod(pArr, 4) == 1), '-o'); % plot only the primes that are == 1 mod 4
+xlabel('p')
+ylabel('# of solns. to L(a) = 1 (mod p)')
+title('Quadratic Residues (p = 1 mod 4)')
 
 figure;
-plot(pArr(mod(pArr, 4) == 3), numSolns(mod(pArr, 4) == 3)); % plot only the primes that are == 3 mod 4
+plot(pArr(mod(pArr, 4) == 3), numSolns(mod(pArr, 4) == 3), '-o'); % plot only the primes that are == 3 mod 4
+xlabel('p')
+ylabel('# of solns. to L(a) = 1 (mod p)')
+title('Quadratic Residues (p = 3 mod 4)')
 

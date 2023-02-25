@@ -31,6 +31,9 @@ for q = primesArr
     qInd = qInd + 1;
 end
 
+figure;
+plot(primes(dim), sum(legendreMat, 2))
+
 % display output matrix
 disp(legendreMat);
 
@@ -46,6 +49,21 @@ axp.Axes.XAxisLocation = 'top';
 xlabel('q')
 ylabel('p')
 title('L(p) mod q')
+
+% create and display heatmap of legendre p (mod q) * legendre q (mod p)
+% (i.e. multiplication across the major diagonal)
+figure;
+recipMat = legendreMat .* legendreMat';
+hMap = heatmap(recipMat);
+hMap.XDisplayLabels = primesArr;
+hMap.YDisplayLabels = primesArr;
+hMap.ColorbarVisible = 'off';
+hMap.GridVisible = 'off';
+axp = struct(hMap);       %you will get a warning
+axp.Axes.XAxisLocation = 'top';
+xlabel('q')
+ylabel('p')
+title('L(p) mod q * L(q) mod p')
 
 % create and display heatmap of square roots
 figure;
