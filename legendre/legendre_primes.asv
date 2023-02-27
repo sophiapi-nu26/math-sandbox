@@ -1,13 +1,13 @@
 % comparing the Legendre symbols of primes p and q
 
-dim = 50;
+dim = 20;
 primesArr = primes(dim);
 
-% dim by dim matrix containing L(p) mod q for all p, q in the first dim primes
+% matrix containing L(p) mod q for all p, q in the first dim primes
 legendreMat = zeros(size(primesArr, 2), size(primesArr, 2));
 
-% dim by dim matrix where sqrtMat(pInd, qInd) = sqrt(p) mod p for all 
-% quadratic residues p mod q (p, q within the first dim primes)
+% matrix where sqrtMat(pInd, qInd) = sqrt(p) mod p for all 
+% quadratic residues p mod q (p, q primes up to dim)
 % for p not quadratic residue of q, sqrtMat(pInd, qInd) = 0
 sqrtMat = zeros(size(primesArr, 2), size(primesArr, 2));
 
@@ -22,8 +22,8 @@ for q = primesArr
         Lpq = legendre_p(p, q);
         legendreMat(pInd, qInd) = Lpq; % place L(p) (mod q) into pth row, qth col
         if (Lpq == 1)
-            sqrts = find(squares(2, :) == p);
-            sqrtMat(pInd, qInd) = sqrts(1);
+            sqrts = find(squares(2, :) == mod(p, q));
+            sqrtMat(pInd, qInd) = sqrts(1) - 1;
         end
         pInd = pInd + 1;
     end
@@ -31,10 +31,14 @@ for q = primesArr
     qInd = qInd + 1;
 end
 
+figure;
+plot(primes(dim), sum(legendreMat, 2))
+
 % display output matrix
 disp(legendreMat);
 
-% create and display heatmap of legendre symbols
+% create and display heatmap of legendre 
+figure;
 hMap = heatmap(legendreMat);
 hMap.XDisplayLabels = primesArr;
 hMap.YDisplayLabels = primesArr;
@@ -45,4 +49,66 @@ axp.Axes.XAxisLocation = 'top';
 xlabel('q')
 ylabel('p')
 title('L(p) mod q')
+
+% create and display heatmap of legendre p (mod q) * legendre q (mod p)
+% (i.e. multiplication across the major diagonal)
+figure;
+recipMat = legendreMat .* legendreMat';
+hMap = heatmap(recipMat);
+hMap.XDisplayLabels = primesArr;
+hMap.YDisplayLabels = primesArr;
+hMap.ColorbarVisible = 'off';
+hMap.GridVisible = 'off';
+axp = struct(hMap);       %you will get a warning
+axp.Axes.XAxisLocation = 'top';
+xlabel('q')
+ylabel('p')
+title('L(p) mod q * L(q) mod p')
+
+% create and display heatmap of legendre p (mod q) * legendre q (mod p)
+% ONLY for q = 1 (mod 4)
+figure;
+primesArr1 = mod(primesArr, 4) == 1;
+recipMat = legendreMat .* legendreMat';
+recipMat = recipMat(:, primesArr1);
+hMap = heatmap(recipMat);
+hMap.XDisplayLabels = primesArr(primesArr1);
+hMap.YDisplayLabels = primesArr;
+hMap.ColorbarVisible = 'off';
+hMap.GridVisible = 'off';
+axp = struct(hMap);       %you will get a warning
+axp.Axes.XAxisLocation = 'top';
+xlabel('q')
+ylabel('p')
+title('L(p) mod q * L(q) mod p where q = 1 (mod 4)')
+
+% create and display heatmap of legendre p (mod q) * legendre q (mod p)
+% ONLY for q = 3 (mod 4)
+figure;
+primesArr3 = mod(primesArr, 4) == 3;
+recipMat = legendreMat .* legendreMat';
+recipMat = recipMat(:, primesArr3);
+hMap = heatmap(recipMat);
+hMap.XDisplayLabels = primesArr3;
+hMap.YDisplayLabels = primesArr3;
+hMap.ColorbarVisible = 'off';
+hMap.GridVisible = 'off';
+axp = struct(hMap);       %you will get a warning
+axp.Axes.XAxisLocation = 'top';
+xlabel('q')
+ylabel('p')
+title('L(p) mod q * L(q) mod p where q = 3 (mod 4)')
+
+% create and display heatmap of square roots
+figure;
+hMap = heatmap(sqrtMat);
+hMap.XDisplayLabels = primesArr;
+hMap.YDisplayLabels = primesArr;
+hMap.ColorbarVisible = 'off';
+hMap.GridVisible = 'off';
+axp = struct(hMap);       %you will get a warning
+axp.Axes.XAxisLocation = 'top';
+xlabel('q')
+ylabel('p')
+title('sqrt(p) mod q (if NaN, 0)')
 
