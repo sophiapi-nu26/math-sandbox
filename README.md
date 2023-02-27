@@ -1,5 +1,5 @@
 # math-sandbox
-A collection of work-in-progress solutions and visualizations for various math-related problems. Each folder contains code and visualizations where applicable. None of these were created to answer a homework problem or project, but simply to explore problems and phenomena I find interesting.
+A collection of work-in-progress solutions and visualizations for various math-related problems. Each folder contains code and visualizations where applicable. These were not created to answer a homework problem or project, but simply to explore problems and phenomena I find interesting.
 
 # pisano
 MATLAB. Exploring fundamental patterns and properties of pisano periods with graphical visualizations.
